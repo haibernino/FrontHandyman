@@ -13,6 +13,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { ServiceMainComponent } from './services/service-main/service-main.component';
 import {CheckboxModule} from 'primeng/checkbox';
+import {TabViewModule} from 'primeng/tabview';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {CheckboxModule} from 'primeng/checkbox';
     CalendarModule,
     ButtonModule,
     HttpClientModule,
-    CheckboxModule
+    CheckboxModule,
+    TabViewModule
   ],
   providers: [],
   bootstrap: [AppComponent]

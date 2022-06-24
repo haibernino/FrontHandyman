@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ServiceMainComponent implements OnInit {
 
+  tabSelected: number = 0;
+  
   constructor() { }
 
   ngOnInit(): void {
