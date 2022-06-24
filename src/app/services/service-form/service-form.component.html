@@ -3,17 +3,22 @@
 
         <div class="box">
             <div class="box-row">
-                <div>
+                <div class="">
                     <label for="documentNumber" class="col-sm-3 col-form-label"><strong>Documento *</strong></label>
                     <p-autoComplete formControlName="documentNumber"
-                        [suggestions]="filteredDataRaw" (completeMethod)="filterDataRaw($event)" field="id"
+                        [suggestions]="filteredDataRaw" (completeMethod)="filterDataRawDocument($event)" field="id"
                         [dropdown]="true">
-                        <ng-template let-country pTemplate="item">
-                            <div class="country-item">
-                                <div>{{country.id}}</div>
+                        <ng-template let-document pTemplate="item">
+                            <div class="document-item">
+                                <div>{{document.id}}</div>
                             </div>
                         </ng-template>
                     </p-autoComplete>
+                    <div *ngIf="documentNumber.invalid && (documentNumber.dirty || documentNumber.touched)" class="text-danger">
+                        <div *ngIf="documentNumber.status === 'INVALID'" class="">
+                          nombre requerido
+                        </div>
+                      </div>
                 </div>
             </div>
             <div class="box-row">
@@ -21,11 +26,11 @@
                     <label for="serviceNumber" class=" col-sm-3 col-form-label"><strong>Número de
                             servicio *</strong></label>
                     <p-autoComplete formControlName="serviceNumber" 
-                        [suggestions]="filteredDataRaw" (completeMethod)="filterDataRaw($event)" field="id"
+                        [suggestions]="filteredDataRaw" (completeMethod)="filterDataRawSerice($event)" field="id"
                         [dropdown]="true">
-                        <ng-template let-country pTemplate="item">
-                            <div class="country-item">
-                                <div>{{country.id}}</div>
+                        <ng-template let-service pTemplate="item">
+                            <div class="service-item">
+                                <div>{{service.id}}</div>
                             </div>
                         </ng-template>
                     </p-autoComplete>
