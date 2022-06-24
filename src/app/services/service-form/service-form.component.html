@@ -1,0 +1,76 @@
+<form [formGroup]="form">
+    <div class="container">
+
+        <div class="box">
+            <div class="box-row">
+                <div>
+                    <label for="documentNumber" class="col-sm-3 col-form-label"><strong>Documento *</strong></label>
+                    <p-autoComplete formControlName="documentNumber"
+                        [suggestions]="filteredDataRaw" (completeMethod)="filterDataRaw($event)" field="id"
+                        [dropdown]="true">
+                        <ng-template let-country pTemplate="item">
+                            <div class="country-item">
+                                <div>{{country.id}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </div>
+            <div class="box-row">
+                <div>
+                    <label for="serviceNumber" class=" col-sm-3 col-form-label"><strong>Número de
+                            servicio *</strong></label>
+                    <p-autoComplete formControlName="serviceNumber" 
+                        [suggestions]="filteredDataRaw" (completeMethod)="filterDataRaw($event)" field="id"
+                        [dropdown]="true">
+                        <ng-template let-country pTemplate="item">
+                            <div class="country-item">
+                                <div>{{country.id}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </div>
+            
+
+            <div class="box-row">
+                <div>
+                    <label for="startDate" class="p-field"><strong>Hora inicio *</strong></label>
+                    <p-calendar [(ngModel)]="startDate" [minDate]="minDate" [maxDate]="maxDate" [readonlyInput]="true" [showIcon]="true"
+                        [showTime]="true" inputId="startTime" formControlName="startDate">
+                    </p-calendar>
+                </div>
+            </div>
+            <div class="box-row">
+                <div>
+                    <label for="finishDate" class="p-field"><strong>Hora fin *</strong></label>
+                    <p-calendar [(ngModel)]="finishDate" [showTime]="true" inputId="finishTime" [showIcon]="true"
+                        formControlName="finishDate">
+                    </p-calendar>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="box-row">
+            <div>
+                <div class="p-field-checkbox">
+                    <p-checkbox name="group1" value="true" inputId="complete"></p-checkbox>
+                    <label for="complete">Completado</label>
+                </div>
+            </div>
+            <div>
+                <div class="p-field-checkbox">
+                    <p-checkbox name="group1" value="false" inputId="pending"></p-checkbox>
+                    <label for="pending">Pendiente</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-footer">
+            <button pButton type="submit" class="ui-button-success" icon="fa-floppy-o" label="Guardar"
+                [disabled]="!form.valid" (click)="onClickSave()"></button>
+        </div>
+    </div>
+
+</form>
