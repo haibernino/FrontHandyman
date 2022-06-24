@@ -26,3 +26,9 @@ label{
 button {
     margin-left: 20px;
 }
+.row{
+    width: 40%;
+    margin: 50px;
+    display: flex;
+    justify-content: space-between;
+}
