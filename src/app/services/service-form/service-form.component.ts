@@ -12,17 +12,20 @@ import { ServiceService } from 'src/app/shared/services/service.service';
 })
 
 export class ServiceFormComponent implements OnInit {
-  
+
   form: FormGroup;
   selectedCountryAdvanced: any;
-  repairManes:technicalModel[] = [];
+  complete:boolean = false;
+  selectedStatus: string[] = [];
+
+  technicals:technicalModel[] = [];
   services:ServiceModel[] = [];
   filteredDataRaw!: any[];
 
   startDate!: Date;
   finishDate!: Date;
-  minDate: Date = new Date();
-  maxDate: Date = new Date();
+  minDateStartHour!: Date;
+  minDateFinishHour: Date = new Date();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,14 +34,18 @@ export class ServiceFormComponent implements OnInit {
   ) {
     this.form = this.formBuilder.group({
       documentNumber: ['', [Validators.required,Validators.minLength(6),Validators.maxLength(10)]],
-      serviceNumber: ['', [Validators.required,Validators.minLength(2),Validators.maxLength(5)]],
+      serviceNumber: ['', [Validators.required,Validators.maxLength(5)]],
       startDate: ['', Validators.required],
-      finishDate: ['', Validators.required]
+      finishDate: ['', Validators.required],
+      status: ['', Validators.required],
     });
    }
 
   ngOnInit(): void {
-    this.repairManes = this.technicalService.technical;
+    let today:Date = new Date();
+    let weekPermission = 1000*60*60*24*7;
+    this.minDateStartHour = new Date(today.getTime() - weekPermission);
+    this.technicals = this.technicalService.technical;
     this.services = this.serrviceService.serviceData;
   }
 
@@ -54,10 +61,9 @@ export class ServiceFormComponent implements OnInit {
     this.filteredDataRaw = filtered;
   }
 
-
   filterDataRawDocument(event:any) {
-    let dataRaw:any;   
-    dataRaw = this.repairManes;
+    let dataRaw:any;
+    dataRaw = this.technicals;
     this.eventFilter(event,dataRaw);
   }
 
@@ -67,11 +73,42 @@ export class ServiceFormComponent implements OnInit {
     this.eventFilter(event,dataRaw);
   }
 
-  get documentNumber():any{
+  onChange() {
+    const latestStatus = this.selectedStatus[this.selectedStatus.length - 1];
+    this.selectedStatus.length = 0;
+    this.selectedStatus.push(latestStatus);
+  }
+
+  get documentNumberForm():any{
+    // console.log(this.form.get('documentNumber'))
     return this.form.get('documentNumber');
   }
 
+  get serviceNumberForm():any{
+    // console.log(this.form.get('documentNumber'))
+    return this.form.get('serviceNumber');
+  }
+
+  get startDateForm():any{
+    // console.log(this.form.get('documentNumber'))
+    return this.form.get('startDate');
+  }
+
+  get finishDateForm():any{
+    // console.log(this.form.get('documentNumber'))
+    return this.form.get('finishDate');
+  }
+
+  get statusForm():any{
+    // console.log(this.form.get('documentNumber'))
+    return this.form.get('status');
+  }
+
   onClickSave():void {
-    console.log(this.form.value)
+    // console.log(this.form.value)
+      this.form.markAllAsTouched()
+      if (this.form.invalid) { 
+        return }
+      console.log(this.form.value)
   }
 }
