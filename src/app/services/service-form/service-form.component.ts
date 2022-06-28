@@ -1,10 +1,12 @@
 import { invalid } from '@angular/compiler/src/render3/view/util';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { registerServiceModel } from 'src/app/shared/models/registerServiceModel';
 import { ServiceModel } from 'src/app/shared/models/serviceModel';
 import { technicalModel } from 'src/app/shared/models/technicalModel';
 import { ServiceTechnicalService } from 'src/app/shared/services/service-technical.service';
 import { ServiceService } from 'src/app/shared/services/service.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-service-form',
@@ -26,7 +28,7 @@ export class ServiceFormComponent implements OnInit {
   startDate!: Date;
   finishDate!: Date;
   minDateStartHour!: Date;
-  minDateFinishHour: Date = new Date();
+  maxDateFinish: Date = new Date();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,14 +42,14 @@ export class ServiceFormComponent implements OnInit {
       finishDate: ['', Validators.required],
     });
   }
-  
+
   statusForm = new FormControl('', [Validators.required]);
 
   ngOnInit(): void {
     let today: Date = new Date();
     let weekPermission = 1000 * 60 * 60 * 24 * 7;
     this.minDateStartHour = new Date(today.getTime() - weekPermission);
-    
+
     this.technicals = this.technicalService.technical;
     this.services = this.serrviceService.serviceData;
   }
@@ -95,22 +97,38 @@ export class ServiceFormComponent implements OnInit {
   }
 
   get finishDateForm(): any {
+    this.compareDateValid();
     return this.form.get('finishDate');
+  }
+
+  compareDateValid():void {
+    if (this.finishDate > this.startDate ){
+      console.log('todo ok')
+    } else {
+      console.log('malo')
+
+    }
+  
   }
 
 
   onClickSave(): void {
-    console.log(this.form.get('status'))
-    console.log(this.statusForm)
-
-    this.form.markAllAsTouched()
-    this.statusForm.markAllAsTouched()
+    this.form.markAllAsTouched();
+    this.statusForm.markAllAsTouched();
     if (this.form.invalid) {
+      Swal.fire('Todos los campos y casillas debe ser validados')
       return
     } else {
-      console.log(this.form.value);
+      let ObjValue :registerServiceModel = {
+        technicalId:this.form.value.documentNumber.id,
+        serviceId: this.form.value.serviceNumber.id,
+        startDate: new Date(this.startDate.toUTCString()).toLocaleString(),
+        finishDate: new Date(this.finishDate.toUTCString()).toLocaleString(),
+        status: this.statusForm.value[0]
+      }
+      console.log(ObjValue);
     }
   }
 
-  
+
 }

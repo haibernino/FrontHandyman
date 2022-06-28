@@ -55,8 +55,8 @@
             <div class="box-row">
                 <div>
                     <label for="startDate" class="p-field"><strong>Hora inicio *</strong></label>
-                    <p-calendar [(ngModel)]="startDate" [minDate]="minDateStartHour" [readonlyInput]="true"
-                        [showIcon]="true" [showTime]="true" inputId="startTime" formControlName="startDate">
+                    <p-calendar [(ngModel)]="startDate" [minDate]="minDateStartHour" [maxDate]="maxDateFinish"  [readonlyInput]="true"
+                        [showIcon]="true" [showTime]="true" inputId="startTime" formControlName="startDate" >
                     </p-calendar>
                     <div *ngIf="startDateForm.invalid && (startDateForm.dirty || startDateForm.touched)"
                         class="text-danger">
@@ -69,7 +69,7 @@
             <div class="box-row">
                 <div>
                     <label for="finishDate" class="p-field"><strong>Hora fin *</strong></label>
-                    <p-calendar [(ngModel)]="finishDate" [minDate]="minDateStartHour" [showTime]="true"
+                    <p-calendar [(ngModel)]="finishDate" [minDate]="minDateStartHour" [maxDate]="maxDateFinish" [showTime]="true"
                         inputId="finishTime" [showIcon]="true" formControlName="finishDate">
                     </p-calendar>
                     <div *ngIf="finishDateForm.invalid && (finishDateForm.dirty || finishDateForm.touched)"
@@ -99,7 +99,7 @@
         </div>
         <div *ngIf="statusForm.invalid && (statusForm.dirty || statusForm.touched)" class=" label-checkbox text-danger button-footer">
             <div *ngIf="statusForm.errors?.['required']" >
-                la casilla "Completado" ó "Pendiente" es requerido.
+                La casilla "Completado" ó "Pendiente" es requerido.
             </div>
         </div>
 
