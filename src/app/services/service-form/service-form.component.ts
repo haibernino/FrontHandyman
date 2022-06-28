@@ -29,6 +29,8 @@ export class ServiceFormComponent implements OnInit {
   finishDate!: Date;
   minDateStartHour!: Date;
   maxDateFinish: Date = new Date();
+  aux = 1;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -93,6 +95,7 @@ export class ServiceFormComponent implements OnInit {
   }
 
   get startDateForm(): any {
+    this.compareDateValid();
     return this.form.get('startDate');
   }
 
@@ -101,14 +104,13 @@ export class ServiceFormComponent implements OnInit {
     return this.form.get('finishDate');
   }
 
-  compareDateValid():void {
-    if (this.finishDate > this.startDate ){
-      console.log('todo ok')
-    } else {
-      console.log('malo')
-
+  compareDateValid():any {
+    // console.log(this.form.get('finishDate'))
+    if (this.finishDate > this.startDate){
+      return false
     }
-  
+    this.form.controls['finishDate'].setErrors({required:true})
+    return true
   }
 
 
@@ -116,7 +118,7 @@ export class ServiceFormComponent implements OnInit {
     this.form.markAllAsTouched();
     this.statusForm.markAllAsTouched();
     if (this.form.invalid) {
-      Swal.fire('Todos los campos y casillas debe ser validados')
+      // Swal.fire('Todos los campos y casillas debe ser validados')
       return
     } else {
       let ObjValue :registerServiceModel = {

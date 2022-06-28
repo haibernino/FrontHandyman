@@ -9,7 +9,7 @@
                         (completeMethod)="filterDataRawDocument($event)" field="id" [dropdown]="true">
                         <ng-template let-document pTemplate="item">
                             <div class="document-item">
-                                <div>{{document.id}}</div>
+                                <div>{{document.id}} &nbsp; {{document.typeDocument}}</div>
                             </div>
                         </ng-template>
                     </p-autoComplete>
@@ -77,6 +77,10 @@
                         <div *ngIf="finishDateForm.errors?.['required']">
                             Hora fin es requerido.
                         </div>
+                    </div>
+                    <div *ngIf="compareDateValid() && (finishDateForm.dirty || finishDateForm.touched)"
+                        class="text-danger">
+                            Hora fin debe ser mayor.
                     </div>
                 </div>
             </div>

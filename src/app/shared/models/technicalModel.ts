@@ -1,5 +1,5 @@
 export interface technicalModel {
-    id: number;
+    id: string;
     typeDocument: string;
     name:string
 }
