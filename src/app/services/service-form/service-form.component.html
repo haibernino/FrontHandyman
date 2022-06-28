@@ -35,7 +35,7 @@
                         (completeMethod)="filterDataRawSerice($event)" field="id" [dropdown]="true">
                         <ng-template let-service pTemplate="item">
                             <div class="service-item">
-                                <div>{{service.id}}</div>
+                                <div>{{service.id}} {{service.typeDocument}}</div>
                             </div>
                         </ng-template>
                     </p-autoComplete>
@@ -69,7 +69,7 @@
             <div class="box-row">
                 <div>
                     <label for="finishDate" class="p-field"><strong>Hora fin *</strong></label>
-                    <p-calendar [(ngModel)]="finishDate" [minDate]="minDateFinishHour" [showTime]="true"
+                    <p-calendar [(ngModel)]="finishDate" [minDate]="minDateStartHour" [showTime]="true"
                         inputId="finishTime" [showIcon]="true" formControlName="finishDate">
                     </p-calendar>
                     <div *ngIf="finishDateForm.invalid && (finishDateForm.dirty || finishDateForm.touched)"
@@ -87,18 +87,18 @@
             <div>
                 <div class="p-field-checkbox">
                     <p-checkbox (onChange)="onChange()" [(ngModel)]="selectedStatus" label="Completado" name="group1"
-                        value="true" inputId="complete" formControlName="status"></p-checkbox>
+                        value="true" inputId="complete" [formControl]="statusForm" ></p-checkbox>
                 </div>
             </div>
             <div>
                 <div class="p-field-checkbox">
                     <p-checkbox (onChange)="onChange()" [(ngModel)]="selectedStatus" label="Pendiente" name="group1"
-                        value="false" inputId="pending" formControlName="status"></p-checkbox>
+                        value="false" inputId="pending" [formControl]="statusForm"></p-checkbox>
                 </div>
             </div>
         </div>
-        <div *ngIf="statusForm.invalid && (statusForm.dirty || statusForm.touched)" class=" label-checkbox text-danger">
-            <div *ngIf="statusForm.errors?.['required']">
+        <div *ngIf="statusForm.invalid && (statusForm.dirty || statusForm.touched)" class=" label-checkbox text-danger button-footer">
+            <div *ngIf="statusForm.errors?.['required']" >
                 la casilla "Completado" ó "Pendiente" es requerido.
             </div>
         </div>
