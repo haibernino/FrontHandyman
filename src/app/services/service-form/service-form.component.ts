@@ -4,9 +4,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { registerServiceModel } from 'src/app/shared/models/registerServiceModel';
 import { ServiceModel } from 'src/app/shared/models/serviceModel';
 import { technicalModel } from 'src/app/shared/models/technicalModel';
+import { ServiceRegisterService } from 'src/app/shared/services/service-register.service';
 import { ServiceTechnicalService } from 'src/app/shared/services/service-technical.service';
 import { ServiceService } from 'src/app/shared/services/service.service';
 import Swal from 'sweetalert2';
+import * as moment from 'moment';
+import { ErrorRequest } from 'src/app/shared/interfaces/ErrorRequest';
 
 @Component({
   selector: 'app-service-form',
@@ -31,11 +34,11 @@ export class ServiceFormComponent implements OnInit {
   maxDateFinish: Date = new Date();
   aux = 1;
 
-
   constructor(
     private formBuilder: FormBuilder,
     private readonly technicalService: ServiceTechnicalService,
-    private readonly serrviceService: ServiceService
+    private readonly serrviceService: ServiceService,
+    private readonly serviceRegisterService:ServiceRegisterService
   ) {
     this.form = this.formBuilder.group({
       documentNumber: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(10)]],
@@ -53,7 +56,32 @@ export class ServiceFormComponent implements OnInit {
     this.minDateStartHour = new Date(today.getTime() - weekPermission);
 
     this.technicals = this.technicalService.technical;
-    this.services = this.serrviceService.serviceData;
+    this.getServices();
+    this.getTechnicals();
+  }
+
+  getServices():void{
+    this.serrviceService.getServices().subscribe((services:ServiceModel[])=>{
+      this.services = services;
+    },(error:ErrorRequest)=>{
+      console.log(error)
+      Swal.fire({
+        icon:"error",
+        text:"Ocurrio un error al cargar los servicios, intenta nuevamente."
+      })
+    })
+  }
+
+  getTechnicals():void{
+    this.technicalService.getTechnicals().subscribe((technicals:technicalModel[])=>{
+      this.technicals = technicals;
+    },(error:ErrorRequest)=>{
+      console.log(error)
+      Swal.fire({
+        icon:"error",
+        text:"Ocurrio un error al cargar los tecnicos, intenta nuevamente."
+      })
+    })
   }
 
   eventFilter(event: any, dataRaw: any) {
@@ -61,7 +89,7 @@ export class ServiceFormComponent implements OnInit {
     let query = event.query;
     for (let i = 0; i < dataRaw.length; i++) {
       let raw = dataRaw[i];
-      if (raw.id.toString().indexOf(query) == 0) {
+      if (raw.toString().indexOf(query) == 0) {
         filtered.push(raw);
       }
     }
@@ -105,7 +133,6 @@ export class ServiceFormComponent implements OnInit {
   }
 
   compareDateValid():any {
-    // console.log(this.form.get('finishDate'))
     if (this.finishDate > this.startDate){
       return false
     }
@@ -113,24 +140,45 @@ export class ServiceFormComponent implements OnInit {
     return true
   }
 
-
   onClickSave(): void {
     this.form.markAllAsTouched();
     this.statusForm.markAllAsTouched();
     if (this.form.invalid) {
-      // Swal.fire('Todos los campos y casillas debe ser validados')
       return
     } else {
-      let ObjValue :registerServiceModel = {
-        technicalId:this.form.value.documentNumber.id,
-        serviceId: this.form.value.serviceNumber.id,
-        startDate: new Date(this.startDate.toUTCString()).toLocaleString(),
-        finishDate: new Date(this.finishDate.toUTCString()).toLocaleString(),
-        status: this.statusForm.value[0]
+      const statusServDetail = this.statusForm.value[0] == 'true' ? 1:0;
+      const objServiceDetail :registerServiceModel = {
+        idTechnicalServDetail: this.form.value.documentNumber.idTechnical,
+        idServiceClientServDetail: this.form.value.serviceNumber.idService,
+        startDateServDetail:moment(this.startDate).format("YYYY-MM-DD HH:mm:ss"),
+        endDateServDetail:moment(this.finishDate).format("YYYY-MM-DD HH:mm:ss"),
+        statusServDetail
       }
-      console.log(ObjValue);
+      Swal.fire({
+        icon:'question',
+        text:`Estas seguro(a) de crear el registro ?`,
+        showConfirmButton:true,
+        showCancelButton:true,
+        confirmButtonText:'Guardar',
+        cancelButtonText:'Cancelar'
+      }).then(res=>{
+        if(res.value){
+          this.serviceRegisterService.saveRegisterService(objServiceDetail).subscribe((response:registerServiceModel)=>{
+            Swal.fire({
+              icon:"success",
+              text:`El servicio ha sido registrado correctamente.`
+            })
+            this.form.reset();
+            this.selectedStatus = [];
+            this.getServices();
+          },({error})=>{
+            Swal.fire({
+              icon:"error",
+              text:error.msg
+            })
+          });
+        }
+      })
     }
   }
-
-
 }

@@ -1,7 +1,7 @@
 export interface registerServiceModel {
-    technicalId: number;
-    serviceId: number;
-    startDate: String;
-    finishDate: String;
-    status: boolean
+    idTechnicalServDetail:String,
+    idServiceClientServDetail:number,
+    startDateServDetail:string,
+    endDateServDetail:string,
+    statusServDetail:number
 }

@@ -1,7 +1,7 @@
 export interface ServiceModel {
-    id:number,
-    typeService:string,
-    address:string,
-    user:number,
-    journey:string
+  idService: number,
+  typeService: String,
+  journeyTypeService: String,
+  addressService: String,
+  userService: number
 }
