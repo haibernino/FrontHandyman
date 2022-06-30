@@ -1,4 +1,3 @@
-import { invalid } from '@angular/compiler/src/render3/view/util';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { registerServiceModel } from 'src/app/shared/models/registerServiceModel';
@@ -32,7 +31,6 @@ export class ServiceFormComponent implements OnInit {
   finishDate!: Date;
   minDateStartHour!: Date;
   maxDateFinish: Date = new Date();
-  aux = 1;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -55,7 +53,6 @@ export class ServiceFormComponent implements OnInit {
     let weekPermission = 1000 * 60 * 60 * 24 * 7;
     this.minDateStartHour = new Date(today.getTime() - weekPermission);
 
-    this.technicals = this.technicalService.technical;
     this.getServices();
     this.getTechnicals();
   }
@@ -99,12 +96,14 @@ export class ServiceFormComponent implements OnInit {
   filterDataRawDocument(event: any) {
     let dataRaw: any;
     dataRaw = this.technicals;
+    dataRaw = dataRaw.technicals
     this.eventFilter(event, dataRaw);
   }
 
   filterDataRawSerice(event: any) {
     let dataRaw: any
     dataRaw = this.services;
+    dataRaw = dataRaw.services
     this.eventFilter(event, dataRaw);
   }
 
@@ -143,7 +142,7 @@ export class ServiceFormComponent implements OnInit {
   onClickSave(): void {
     this.form.markAllAsTouched();
     this.statusForm.markAllAsTouched();
-    if (this.form.invalid) {
+    if (this.form.invalid || this.statusForm.invalid) {
       return
     } else {
       const statusServDetail = this.statusForm.value[0] == 'true' ? 1:0;
@@ -169,6 +168,7 @@ export class ServiceFormComponent implements OnInit {
               text:`El servicio ha sido registrado correctamente.`
             })
             this.form.reset();
+            this.statusForm.reset();
             this.selectedStatus = [];
             this.getServices();
           },({error})=>{
